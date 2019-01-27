@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const response = require('../libs/responseLib');
+const response = require('../../libs/responseLib');
 
 let hashPassword = (plainTextPassword)=>{
     return new Promise((resolve,reject)=>{

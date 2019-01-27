@@ -1,12 +1,9 @@
 const mongoose = require('mongoose');
-const shortid = require('shortid');
-const time = require('./../libs/timeLib');
-const response = require('./../libs/responseLib')
-const logger = require('./../libs/loggerLib');
-const validateInput = require('../libs/paramsValidationLib');
-const check = require('../libs/checkLib');
-const hashPassword = require('../libs/hashPassword');
-const token = require('../libs/tokenLib');
+const time = require('../timeLib');
+const response = require('../../libs/responseLib')
+const check = require('../checkLib');
+const hashPassword = require('../passwordLib/hashPassword');
+const token = require('../tokenLib/tokenLib');
 
 /* Models */
 const UserModel = mongoose.model('User');
@@ -16,8 +13,8 @@ const AuthModel = mongoose.model('AuthModel');
 /**
  * find user from mongodb database using find query!
  * 
- * @param {*} req request body for http request
- * @param {*} res response body for http request
+ * @param req request body for http request
+ * @param res response body for http request
  */
 
 let findUser = (req, res) => {

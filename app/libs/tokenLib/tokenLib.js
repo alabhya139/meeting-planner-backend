@@ -28,7 +28,7 @@ let generateToken = (data,callback)=>{
 
 }
 
-let verifyToken = (token,callback)=>{
+let verifyToken = (token, secretKey, callback)=>{
     jwt.verify(token,secretKey, function(error,verified){
         if(error){
             console.log(error);

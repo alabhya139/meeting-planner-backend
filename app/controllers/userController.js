@@ -3,13 +3,13 @@ const logger = require('./../libs/loggerLib');
 const mongoose = require('mongoose');
 const _ = require('lodash');
 
-const password = require('../libs/hashPassword');
+const password = require('../libs/passwordLib/hashPassword');
 
 const UserModel = mongoose.model('User');
 
 
-const newUser = require('../libs/newUser');
-const login = require('../libs/loginLib');
+const newUser = require('../libs/user-management-libs/newUser');
+const login = require('../libs/user-management-libs/loginLib');
 
 
 // start user signup function

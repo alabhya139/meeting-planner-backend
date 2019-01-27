@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const shortid = require('shortid');
-const time = require('./../libs/timeLib');
-const response = require('./../libs/responseLib')
-const logger = require('./../libs/loggerLib');
-const validateInput = require('../libs/paramsValidationLib');
-const check = require('../libs/checkLib');
-const hashPassword = require('../libs/hashPassword');
+const time = require('../timeLib');
+const response = require('../../libs/responseLib')
+const logger = require('../loggerLib');
+const validateInput = require('../paramsValidationLib');
+const check = require('../checkLib');
+const hashPassword = require('../passwordLib/hashPassword');
 
 /* Models */
 const UserModel = mongoose.model('User')
@@ -20,7 +20,8 @@ let createUser = (req,res) => {
             })
             .exec((err, retrievedDetails) => {
                 if (err) {
-                    let apiResponse = response.generate(false, "Something went wrong!", 400, err);
+                    let apiResponse = response.generate(false, 
+                        "Something went wrong!", 400, err);
                     reject(apiResponse)
                 } else if (check.isEmpty(retrievedDetails)) {
                     hashPassword.hashPassword(data.password,res)
@@ -38,7 +39,8 @@ let createUser = (req,res) => {
                         user.save((err, newUser) => {
                             if (err) {
                                 console.log(err);
-                                let apiResponse = response.generate(false, "Failed to create user", 400, err);
+                                let apiResponse = response.generate(false, 
+                                    "Failed to create user", 400, err);
                                 reject(apiResponse);
                             } else if (newUser) {
                                 resolve(newUser);
@@ -49,7 +51,8 @@ let createUser = (req,res) => {
                         res.send(error);
                     })
                 } else {
-                    let apiResponse = response.generate(false, "User Already Registered", 403, null);
+                    let apiResponse = response.generate(false, 
+                        "User Already Registered", 403, null);
                     reject(apiResponse);
                 }
             })
