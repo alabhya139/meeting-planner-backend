@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const response = require('../libs/responseLib');
 
 let hashPassword = (plainTextPassword)=>{
     return new Promise((resolve,reject)=>{
@@ -20,7 +21,10 @@ let comparePassword = (plainTextPassword,hash)=>{
                 reject(apiResponse);
             }else if(result){
                 resolve(result);
-            }else reject(result);
+            }else {
+                let apiResponse = response.generate(true,"Incorrect Password!",400,err);
+                reject(apiResponse);
+            }
         })
     })
 }

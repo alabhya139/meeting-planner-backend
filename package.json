@@ -1,12 +1,12 @@
 {
-  "name": "boilerplate-simple",
+  "name": "meetin-planner-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Aditya <contact@theguywithideas.com>",
+  "author": "Alabhya Pandey",
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^3.0.3",

@@ -13,6 +13,13 @@ const UserModel = mongoose.model('User');
 const AuthModel = mongoose.model('AuthModel');
 
 
+/**
+ * find user from mongodb database using find query!
+ * 
+ * @param {*} req request body for http request
+ * @param {*} res response body for http request
+ */
+
 let findUser = (req, res) => {
     let data = req.body;
     return new Promise((resolve, reject) => {
@@ -27,67 +34,71 @@ let findUser = (req, res) => {
                     let apiResponse = response.generate(true, "Unable to find User", 404, null);
                     reject(apiResponse);
                 } else {
-                    hashPassword.comparePassword(data.password, userDetails.password)
-                        .then(result => {
-                            if (result) {
-                                let tokenData = {
-                                    userId: userDetails.userId,
-                                    userName: `${userDetails.firtName} ${userDetails.lastName}`
-                                }
-
-                                token.generateToken(tokenData, (error, tokenDetails) => {
-                                    if (error) {
-                                        let apiResponse = response.generate(true, "Error in generating Token", 400, error);
-                                        reject(apiResponse);
-                                    } else {
-                                        AuthModel.findOne({userId: userDetails.userId})
-                                        .exec((err,tokenResult)=>{
-                                            if(error){
-                                                let apiResponse = response.generate(true, "Error in finding Token", 400, error);
-                                                reject(apiResponse);
-                                            }else if(check.isEmpty(tokenResult)){
-                                                let token = new AuthModel({
-                                                    userId: userDetails.userId,
-                                                    authToken: tokenDetails.token,
-                                                    tokenSecret: tokenDetails.tokenSecret,
-                                                    issuedTime: time.now()
-                                                })
-
-                                                token.save((err,result)=>{
-                                                    if(err){
-                                                        let apiResponse = response.generate(true, "Error in saving Token", 400, err);
-                                                        reject(apiResponse);
-                                                    }else {
-                                                        let loginResponse = {
-                                                            authToken: result.authToken,
-                                                            userDetails
-                                                        }
-        
-                                                        let apiResponse = response.generate(false, "Succesfully logged in", 200, loginResponse);
-                                                        resolve(apiResponse);
-                                                    }
-                                                })
-                                            }else {
-                                                let loginResponse = {
-                                                    authToken: tokenResult.authToken,
-                                                    userDetails
-                                                }
-
-                                                let apiResponse = response.generate(false, "Succesfully logged in", 200, loginResponse);
-                                                resolve(apiResponse);
-                                            }
-                                        })
-
-                                    }
-                                })
-
-                            }
-                        })
+                    resolve(userDetails)
                 }
-            })
-    })
+            });//end of exec
+    });//end of promise
+}//end of findUser function
+
+/**
+ * function to save token in the @AuthModel for authorization purpose
+ * 
+ * @param userDetails Details of user
+ */
+
+let saveToken = (userDetails)=>{
+    return new Promise((resolve,reject)=>{
+        AuthModel.findOne({userId: userDetails.userId})
+            .exec((error,tokenDetails)=>{
+                if(error){
+                    let apiResponse = response.generate(true,"Unable to find token details",
+                    400,error);
+                    reject(apiResponse);
+                }else if(check.isEmpty(tokenDetails)){
+                    let tokenInfo;
+                    token.generateToken(userId,(err,token)=>{
+                        if(err){
+                            let apiResponse = response.generate(true,"Unable to generate token",
+                            400,err);
+                            reject(apiResponse);
+                        }else{
+                            tokenInfo = token;
+                        }
+                    });//end of generateToken
+                    let authDetails = new AuthModel({
+                        userId: userDetails.userId,
+                        authToken: tokenInfo,
+                        tokenSecret: tokenDetails.tokenSecret,
+                        issuedTime: time.now()
+                    });
+
+                    authDetails.save((err,token)=>{
+                        if(err){
+                            let apiResponse = response.generate(true,"Unable to save token",
+                            400,err);
+                            reject(apiResponse);
+                        }else {
+                            let data = {
+                                authToken: token.authToken,
+                                userDetails: userDetails
+                            }
+                            resolve(data);
+                        }
+                    });//end of save
+                }else {
+                    let data = {
+                        authToken: tokenDetails.authToken,
+                        userDetails: userDetails
+                    }
+
+                    resolve(data);
+                }
+            });//end of exec
+    });//end of promise
 }
 
+
 module.exports = {
-    findUser
+    findUser,
+    saveToken
 }
