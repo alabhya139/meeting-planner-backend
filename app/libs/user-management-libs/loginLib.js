@@ -53,7 +53,7 @@ let saveToken = (userDetails)=>{
                     reject(apiResponse);
                 }else if(check.isEmpty(tokenDetails)){
                     let tokenInfo;
-                    token.generateToken(userId,(err,token)=>{
+                    token.generateToken(userDetails.userId,(err,token)=>{
                         if(err){
                             let apiResponse = response.generate(true,"Unable to generate token",
                             400,err);
@@ -64,8 +64,8 @@ let saveToken = (userDetails)=>{
                     });//end of generateToken
                     let authDetails = new AuthModel({
                         userId: userDetails.userId,
-                        authToken: tokenInfo,
-                        tokenSecret: tokenDetails.tokenSecret,
+                        authToken: tokenInfo.token,
+                        tokenSecret: tokenInfo.tokenSecret,
                         issuedTime: time.now()
                     });
 

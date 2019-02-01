@@ -10,19 +10,17 @@ let authModel = new Schema({
     },
     authToken:{
         type: String,
-        unique: true,
+        unique:true,
         default: '',
         required: true
     },
     tokenSecret:{
         type: String,
-        unique: true,
         default: '',
         required: true
     },
     issuedTime:{
         type: String,
-        unique: true,
         default: '',
         required: true
     }
