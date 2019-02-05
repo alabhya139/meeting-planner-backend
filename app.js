@@ -147,6 +147,9 @@ mongoose.connection.on('open', function (err) {
 
 
 
+const socket = require('./app/libs/socketLib');
+socket.setServer(server);
+
 // end socketio connection handler
 
 

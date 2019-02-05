@@ -10,7 +10,6 @@ let userSchema = new Schema({
   userId: {
     type: String,
     default: '',
-    index: true,
     unique: true
   },
   firstName: {

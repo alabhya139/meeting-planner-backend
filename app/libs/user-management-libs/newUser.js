@@ -32,7 +32,8 @@ let createUser = (req, res) => {
                                 firstName: data.firstName,
                                 lastName: data.lastName,
                                 password: hash,
-                                email: data.email,
+                                isAdmin: data.isAdmin,
+                                email: data.email.toLowerCase(),
                                 mobileNumber: data.mobileNumber,
                                 createdOn: time.now()
                             });

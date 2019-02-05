@@ -21,7 +21,7 @@ let findUser = (req, res) => {
     let data = req.body;
     return new Promise((resolve, reject) => {
         UserModel.findOne({
-                email: data.email
+                email: data.email.toLowerCase()
             })
             .exec((error, userDetails) => {
                 if (error) {

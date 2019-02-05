@@ -65,7 +65,7 @@ module.exports.setRouter = (app) => {
         }
     */
     // auth token params: userId.
-    app.post(`${baseUrl}/logout`, userController.logout);
+    app.post(`${baseUrl}/logout/:userId`, userController.logout);
 
     app.get(`${baseUrl}/verifyUser`, userController.verifyUser);
 

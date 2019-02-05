@@ -9,6 +9,7 @@ const check = require('../libs/checkLib');
 const password = require('../libs/passwordLib/hashPassword');
 
 const UserModel = mongoose.model('User');
+const AuthModel = mongoose.model('Meetings');
 
 
 const newUser = require('../libs/user-management-libs/newUser');
@@ -69,6 +70,15 @@ let loginFunction = (req, res) => {
 
 
 let logout = (req, res) => {
+    AuthModel.findOneAndDelete({userId:req.params.userId},(err,resp)=>{
+        if(err){
+            let apiResponse = response.generate(true, "Unable to logout user", 400, err);
+            res.send(apiResponse);
+        }else{
+            let apiResponse = response.generate(false, "User logout successfully", 200, resp);
+            res.send(apiResponse);
+        }
+    })
 
 } // end of the logout function.
 
