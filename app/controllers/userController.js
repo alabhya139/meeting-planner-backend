@@ -157,7 +157,7 @@ let forgotPasswordSendEmail = (req,res)=>{
                 from: 'meetingplannerapp@gmail.com',
                 to: email,
                 subject: 'Reset your Password',
-                text: `Please change your password by clicking the link below\n\nhttp://localhost:3000/forgot-password-verify-user/${tokenForMail}`
+                text: `Please change your password by clicking the link below\n\nhttp://localhost:4200/home/forgot-password-verify-user/${tokenForMail}`
             };
         
             mailService.sendMail(mailOptions)
@@ -173,6 +173,18 @@ let forgotPasswordSendEmail = (req,res)=>{
     })
 }
 
+let getUserByUserId = (req,res)=>{
+    UserModel.findOne({userId:req.params.userId},(err,resp)=>{
+        if(err){
+            let apiResponse = response.generate(true, "Unable to find user", 400, null);
+            res.send(apiResponse);
+        }else{
+            let apiResponse = response.generate(false, "User found", 200, resp);
+            res.send(apiResponse);
+        }
+    })
+}
+
 let forgotPasswordVerifyUser = (req,res)=>{
     
 }
@@ -183,17 +195,25 @@ let changePassword = (req,res)=>{
             let apiResponse = response.generate(false, "Unable to verify user", 500, null);
             res.send(apiResponse);
         }else{
-            UserModel.findOneAndUpdate({email:decoded.data},{password:req.body.password},(err,resp)=>{
-                if(err){
-                    let apiResponse = response.generate(true, "Unable to change Password", 400, err);
-                    res.send(apiResponse);
-                    console.log(apiResponse)
-                }else{
-                    let apiResponse = response.generate(false, "Email Password Changed Succcesfully", 200, null);
-                    res.send(apiResponse);
-                    console.log(apiResponse)
-                }
-            })
+            let hashed;
+            password.hashPassword(req.body.password)
+                .then(hash=>{
+                    UserModel.findOneAndUpdate({email:decoded.data.toLowerCase()},{password:hash},{new:true},(err,resp)=>{
+                        if(err){
+                            let apiResponse = response.generate(true, "Unable to change Password", 400, err);
+                            res.send(apiResponse);
+                            console.log(apiResponse)
+                        }else{
+                            let apiResponse = response.generate(false, "Password Changed Succcesfully", 200, resp);
+                            console.log(apiResponse)
+                            res.send(apiResponse);
+                            
+                        }
+                    })
+                })
+                .catch(error=>{
+                    res.send(error);
+                })
         }
     })
 }
@@ -208,6 +228,7 @@ module.exports = {
     verifyUser,
     forgotPasswordSendEmail,
     forgotPasswordVerifyUser,
-    changePassword
+    changePassword,
+    getUserByUserId
 
 } // end exports
