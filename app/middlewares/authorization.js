@@ -13,6 +13,7 @@ let isAuthorized = (req,res,next)=>{
             req.query.authToken || req.header('authToken')})
             .exec((err,authDetails)=>{
                 if(err){
+                    console.log("error token"+err)
                     let apiResponse = response.generate(true,"Invalid auth token",400,err);
                     res.send(apiResponse)
                 }else if(check.isEmpty(authDetails)){

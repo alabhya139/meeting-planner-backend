@@ -8,7 +8,6 @@ let generateToken = (data,callback)=>{
         let claims = {
             jwtId: shortId.generate(),
             iat:Date.now(),
-            exp: Math.floor(Date.now()/1000) + (60*60*24), //24 hours
             sub: 'auth-token',
             iss: 'alabhya',
             data: data

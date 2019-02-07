@@ -8,6 +8,10 @@ let setServer = (server)=>{
 
     myIo.on('connection',(socket)=>{
         socket.emit('verify-user')
+
+        socket.on('event-created',(data)=>{
+            
+        })
     })
 }
 

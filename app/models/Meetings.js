@@ -31,6 +31,34 @@ let MeetingSchema = new Schema({
         type: Number,
         default: ""
     },
+    s_hour:{
+        type: String,
+        default: ""
+    },
+    s_min:{
+        type: String,
+        default: ""
+    },
+    s_time:{
+        type: String,
+        default: ""
+    },
+    e_hour:{
+        type: String,
+        default: ""
+    },
+    e_min:{
+        type: String,
+        default: ""
+    },
+    e_time:{
+        type: String,
+        default: ""
+    },
+    allDay:{
+        type:Boolean,
+        default: true
+    },
     meetingTitle: {
         type: String,
         required: true
