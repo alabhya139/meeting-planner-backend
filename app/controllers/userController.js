@@ -157,7 +157,7 @@ let forgotPasswordSendEmail = (req,res)=>{
                 from: 'meetingplannerapp@gmail.com',
                 to: email,
                 subject: 'Reset your Password',
-                text: `Please change your password by clicking the link below\n\nhttp://localhost:4200/home/forgot-password-verify-user/${tokenForMail}`
+                text: `Please change your password by clicking the link below\n\nhttp://meetingplanner.alabhya.me/home/forgot-password-verify-user/${tokenForMail}`
             };
         
             mailService.sendMail(mailOptions)

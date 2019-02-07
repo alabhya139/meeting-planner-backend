@@ -52,7 +52,7 @@ let createUser = (req, res) => {
                                 from: 'meetingplannerapp@gmail.com',
                                 to: data.email,
                                 subject: 'Verify Your Account',
-                                text: `Please verify your account by clicking on the link below\n\nhttp://localhost:3000/verifyAccount/${tokenForMail.token}`
+                                text: `Please verify your account by clicking on the link below\n\nhttp://meetingplannerapi.alabhya.me/api/v1/verifyUser/${tokenForMail.token}`
                             };
 
                             console.log(mailOptions)
