@@ -67,9 +67,12 @@ module.exports.setRouter = (app) => {
     // auth token params: userId.
     app.post(`${baseUrl}/logout/:userId`, userController.logout);
 
-    app.get(`${baseUrl}/verifyUser`, userController.verifyUser);
+    app.get(`${baseUrl}/verifyUser/:token`, userController.verifyUser);
 
     app.get(`${baseUrl}/getUsers`, authMiddleware.isAuthorized, userController.getUser);
 
+    app.post(`${baseUrl}/forgot-password-send-email`,userController.forgotPasswordSendEmail);
+    app.get(`${baseUrl}/forgot-password-verify-user/:token`,userController.forgotPasswordVerifyUser);
+    app.post(`${baseUrl}/change-password`,userController.changePassword);
 
 }

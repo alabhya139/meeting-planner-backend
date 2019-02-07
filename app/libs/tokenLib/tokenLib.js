@@ -33,7 +33,40 @@ let verifyToken = (token, secretKey, callback)=>{
             console.log(error);
             callback(error,null);
         }else{
-            console.log("user verfied!");
+            callback(null,verified);
+        }
+    });
+}
+
+let generateTokenForEmail = (userId,callback)=>{
+    try{
+        let claims = {
+            jwtId: shortId.generate(),
+            iat:Date.now(),
+            sub: 'auth-token',
+            iss: 'alabhya',
+            data: userId
+        }
+
+        let tokenDetails = {
+            token: jwt.sign(claims,secretKey),
+            tokenSecret: secretKey
+        }
+
+        callback(null,tokenDetails);
+
+    }catch(error){
+        console.log(error);
+        callback(error,null);
+    }
+}
+
+let verifyTokenWithoutSecret = (token, callback)=>{
+    jwt.verify(token,secretKey, function(error,verified){
+        if(error){
+            console.log(error);
+            callback(error,null);
+        }else{
             callback(null,verified);
         }
     });
@@ -41,5 +74,7 @@ let verifyToken = (token, secretKey, callback)=>{
 
 module.exports = {
     generateToken,
-    verifyToken
+    verifyToken,
+    generateTokenForEmail,
+    verifyTokenWithoutSecret
 }

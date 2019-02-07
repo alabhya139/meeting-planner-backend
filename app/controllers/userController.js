@@ -7,6 +7,8 @@ const hashLib = require('../libs/hashIt');
 const check = require('../libs/checkLib');
 
 const password = require('../libs/passwordLib/hashPassword');
+const token = require('../libs/tokenLib/tokenLib');
+const mailService = require('../libs/sendMail');
 
 const UserModel = mongoose.model('User');
 const AuthModel = mongoose.model('Meetings');
@@ -100,37 +102,100 @@ let getUser = (req, res) => {
 //verify User
 
 let verifyUser = (req, res) => {
-    UserModel.findOne({
-            userId: req.query.userId
-        })
-        .exec((err, userDetails) => {
-            if (err) {
-                let apiResponse = response.generate(true, "Error in finding user!", 500, err);
-                res.send(apiResponse);
-            } else if (check.isEmpty(userDetails)) {
-                let apiResponse = response.generate(true, "User not found!", 404, null);
-                res.send(apiResponse);
-            } else {
-                if (!userDetails.isVerified) {
-                    UserModel.findOneAndUpdate({
-                        isVerified: userDetails.isVerified
-                    }, {
-                        isVerified: true
-                    }, (err, success) => {
-                        if (err) {
-                            let apiResponse = response.generate(true, "Error in verifying user!", 500, err);
-                            res.send(apiResponse);
-                        } else {
-                            let apiResponse = response.generate(false, "Users verified succesfully!", 200, null);
-                            res.send(apiResponse);
-                        }
-                    })
-                } else {
-                    let apiResponse = response.generate(true, "Link expired", 400, null);
+    let userId;
+    
+    token.verifyTokenWithoutSecret(req.params.token,(err,decodedValue)=>{
+        if(err){
+            let apiResponse = response.generate(true, "Error in finding email!", 500, err);
+            res.send(apiResponse);
+        }else{
+            userId = decodedValue.data;
+
+            UserModel.findOne({
+                userId
+            })
+            .exec((err, userDetails) => {
+                if (err) {
+                    let apiResponse = response.generate(true, "Error in finding user!", 500, err);
                     res.send(apiResponse);
+                } else if (check.isEmpty(userDetails)) {
+                    let apiResponse = response.generate(true, "User not found!", 404, null);
+                    res.send(apiResponse);
+                } else {
+                    if (!userDetails.isVerified) {
+                        UserModel.findOneAndUpdate({
+                            isVerified: userDetails.isVerified
+                        }, {
+                            isVerified: true
+                        }, (err, success) => {
+                            if (err) {
+                                let apiResponse = response.generate(true, "Error in verifying user!", 500, err);
+                                res.send(apiResponse);
+                            } else {
+                                res.send(`User Verified Successfully Please Login`)
+                            }
+                        })
+                    } else {
+                        let apiResponse = response.generate(true, "Link expired", 400, null);
+                        res.send(apiResponse);
+                    }
                 }
-            }
-        })
+            });
+        }
+    });
+}
+
+let forgotPasswordSendEmail = (req,res)=>{
+    let email = req.body.email;
+    let tokenForMail;
+    token.generateToken(email,(err,tokenDetail)=>{
+        if(err){
+
+        }else{
+            tokenForMail=tokenDetail.token
+            let mailOptions = {
+                from: 'meetingplannerapp@gmail.com',
+                to: email,
+                subject: 'Reset your Password',
+                text: `Please change your password by clicking the link below\n\nhttp://localhost:3000/forgot-password-verify-user/${tokenForMail}`
+            };
+        
+            mailService.sendMail(mailOptions)
+                .then(resolve=>{
+                    let apiResponse = response.generate(false, "Email sent!", 200, null);
+                    res.send(apiResponse);
+                })
+                .catch(reject=>{
+                    let apiResponse = response.generate(true, "Unable to change Password", 400, null);
+                    res.send(apiResponse);
+                });
+        }
+    })
+}
+
+let forgotPasswordVerifyUser = (req,res)=>{
+    
+}
+
+let changePassword = (req,res)=>{
+    token.verifyTokenWithoutSecret(req.query.token,(err,decoded)=>{
+        if(err){
+            let apiResponse = response.generate(false, "Unable to verify user", 500, null);
+            res.send(apiResponse);
+        }else{
+            UserModel.findOneAndUpdate({email:decoded.data},{password:req.body.password},(err,resp)=>{
+                if(err){
+                    let apiResponse = response.generate(true, "Unable to change Password", 400, err);
+                    res.send(apiResponse);
+                    console.log(apiResponse)
+                }else{
+                    let apiResponse = response.generate(false, "Email Password Changed Succcesfully", 200, null);
+                    res.send(apiResponse);
+                    console.log(apiResponse)
+                }
+            })
+        }
+    })
 }
 
 
@@ -140,6 +205,9 @@ module.exports = {
     loginFunction,
     logout,
     getUser,
-    verifyUser
+    verifyUser,
+    forgotPasswordSendEmail,
+    forgotPasswordVerifyUser,
+    changePassword
 
 } // end exports

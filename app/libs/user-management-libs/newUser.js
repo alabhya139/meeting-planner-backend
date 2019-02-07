@@ -7,7 +7,7 @@ const validateInput = require('../paramsValidationLib');
 const check = require('../checkLib');
 const hashPassword = require('../passwordLib/hashPassword');
 const mailServer = require('../sendMail');
-
+const token = require('../tokenLib/tokenLib')
 /* Models */
 const UserModel = mongoose.model('User')
 var hashedPassword;
@@ -38,14 +38,21 @@ let createUser = (req, res) => {
                                 createdOn: time.now()
                             });
 
-                            console.log(user)
+                            let tokenForMail;
+                            token.generateTokenForEmail(user.userId,(err,token)=>{
+                                if(err){
+                                    reject(err)
+                                }else{
+                                    tokenForMail = token;
+                                }
+                            })
                         
                             console.log("email"+data.email)
                             let mailOptions = {
                                 from: 'meetingplannerapp@gmail.com',
                                 to: data.email,
                                 subject: 'Verify Your Account',
-                                text: `Please verify your account by clicking on the link below\n\nhttp://localhost:3000/verifyAccount?userId=${user.userId}`
+                                text: `Please verify your account by clicking on the link below\n\nhttp://localhost:3000/verifyAccount/${tokenForMail.token}`
                             };
 
                             console.log(mailOptions)

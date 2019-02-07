@@ -30,6 +30,9 @@ let findUser = (req, res) => {
                 } else if (check.isEmpty(userDetails)) {
                     let apiResponse = response.generate(true, "Unable to find User", 404, null);
                     reject(apiResponse);
+                }else if(userDetails.isVerified==false){
+                    let apiResponse = response.generate(true, "Please Verify your account first", 400, null);
+                    reject(apiResponse);
                 } else {
                     resolve(userDetails)
                 }
