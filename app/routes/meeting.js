@@ -14,7 +14,7 @@ module.exports.setRouter = (app) => {
 
     app.get(`${baseUrl}/get-meetings`, meetingsController.getAllMeetings);
 
-    app.get(`${baseUrl}/get-meeting-by-id/:meetingId`,authMiddleware.isAuthorized, meetingsController.getMeetingById);
+    app.get(`${baseUrl}/get-meeting-by-id/:meetingId`, meetingsController.getMeetingById);
 
     app.get(`${baseUrl}/get-meetings-by-user/:userId`,meetingsController.getMeetingsByUser);
 
