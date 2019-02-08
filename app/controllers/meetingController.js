@@ -99,7 +99,7 @@ let getMeetingsByAdmin = (req, res) => {
 }
 
 let deleteMeetingById = (req,res)=>{
-    MeetingModel.findOneAndDelete({meetingId:req.query.meeetingId},(err,resp)=>{
+    MeetingModel.findOneAndRemove({meeetingId:req.body.meeetingId},(err,resp)=>{
         if(err){
             let apiResponse = response.generate(true, "Unable to delete meeting", 400, err);
             res.send(apiResponse);
