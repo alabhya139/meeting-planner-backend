@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const shortId = require('shortid');
 const time = require('../libs/timeLib');
+const check = require('../libs/checkLib')
 
 const MeetingModel = mongoose.model('Meetings');
 
@@ -98,12 +99,12 @@ let getMeetingsByAdmin = (req, res) => {
 }
 
 let deleteMeetingById = (req,res)=>{
-    MeetingModel.findOneAndRemove({meetingId:req.query.meetingId},(err,resp)=>{
+    MeetingModel.findOneAndDelete({meetingId:req.query.meeetingId},(err,resp)=>{
         if(err){
-            let apiResponse = response.generate(true, "Unable to delete meetings", 400, err);
+            let apiResponse = response.generate(true, "Unable to delete meeting", 400, err);
             res.send(apiResponse);
-        }else{
-            let apiResponse = response.generate(false, "Meetings deleted successfully!", 200, resp);
+        }else {
+            let apiResponse = response.generate(false, "meeting deleted succesfully", 200, resp);
             res.send(apiResponse);
         }
     })
