@@ -3,7 +3,6 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 const meetingsController = require("../controllers/meetingController")
 const appConfig = require("./../../config/appConfig")
-const authMiddleware = require('../middlewares/authorization');
 
 module.exports.setRouter = (app) => {
 
