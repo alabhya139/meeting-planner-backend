@@ -22,5 +22,5 @@ module.exports.setRouter = (app) => {
 
     app.post(`${baseUrl}/editMeeting`, meetingsController.editMeeting);
 
-    app.get(`${baseUrl}/delete-meeting/:meetingId`, meetingsController.deleteMeetingById);
+    app.get(`${baseUrl}/delete-meeting`, meetingsController.deleteMeetingById);
 }
