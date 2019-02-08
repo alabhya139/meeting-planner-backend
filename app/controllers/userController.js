@@ -11,7 +11,7 @@ const token = require('../libs/tokenLib/tokenLib');
 const mailService = require('../libs/sendMail');
 
 const UserModel = mongoose.model('User');
-const AuthModel = mongoose.model('Meetings');
+const AuthModel = mongoose.model('AuthModel');
 
 
 const newUser = require('../libs/user-management-libs/newUser');
@@ -72,12 +72,13 @@ let loginFunction = (req, res) => {
 
 
 let logout = (req, res) => {
-    AuthModel.findOneAndDelete({userId:req.params.userId},(err,resp)=>{
+    AuthModel.findOneAndDelete({userId:req.body.userId},function(err,resp){
         if(err){
             let apiResponse = response.generate(true, "Unable to logout user", 400, err);
+            console.log("error")
             res.send(apiResponse);
         }else{
-            let apiResponse = response.generate(false, "User logout successfully", 200, resp);
+            let apiResponse = response.generate(false, "User logged out successfully", 200,resp );
             res.send(apiResponse);
         }
     })
