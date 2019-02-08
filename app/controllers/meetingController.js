@@ -97,6 +97,18 @@ let getMeetingsByAdmin = (req, res) => {
     })
 }
 
+let deleteMeetingById = (req,res)=>{
+    MeetingModel.findByIdAndRemove({meetingId:req.params.id},(err,apiResponse)=>{
+        if(err){
+            let apiResponse = response.generate(true, "Unable to delete meetings", 400, err);
+            res.send(apiResponse);
+        }else{
+            let apiResponse = response.generate(false, "Meetings deleted successfully!", 200, resp);
+            res.send(apiResponse);
+        }
+    })
+}
+
 let editMeeting = (req, res) => {
     MeetingModel.findOneAndRemove({
         meetingId: req.query.meetingId
@@ -150,5 +162,6 @@ module.exports = {
     getMeetingById,
     getMeetingsByUser,
     getMeetingsByAdmin,
-    editMeeting
+    editMeeting,
+    deleteMeetingById
 }
