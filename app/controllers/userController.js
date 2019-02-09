@@ -175,7 +175,7 @@ let forgotPasswordSendEmail = (req,res)=>{
 }
 
 let getUserByUserId = (req,res)=>{
-    UserModel.findOne({userId:req.params.userId},(err,resp)=>{
+    UserModel.findOne({userId:req.query.userId},(err,resp)=>{
         if(err){
             let apiResponse = response.generate(true, "Unable to find user", 400, null);
             res.send(apiResponse);

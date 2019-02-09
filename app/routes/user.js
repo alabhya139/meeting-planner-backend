@@ -105,7 +105,7 @@ module.exports.setRouter = (app) => {
     app.get(`${baseUrl}/verifyUser/:token`, userController.verifyUser);
 
     app.get(`${baseUrl}/getUsers`, authMiddleware.isAuthorized, userController.getUser);
-    app.get(`${baseUrl}/getUsersById/:userId`, userController.getUserByUserId);
+    app.get(`${baseUrl}/getUsersById`, userController.getUserByUserId);
 
     app.post(`${baseUrl}/forgot-password-send-email`, userController.forgotPasswordSendEmail);
     app.get(`${baseUrl}/forgot-password-verify-user/:token`, userController.forgotPasswordVerifyUser);
