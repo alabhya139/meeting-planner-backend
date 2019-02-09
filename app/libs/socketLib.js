@@ -30,7 +30,7 @@ let setServer = (server)=>{
                 from: 'meetingplannerapp@gmail.com',
                 to: data.email,
                 subject: 'New Event created',
-                text: `A new event is created today by ${response.adminName} on ${new Date(response.startDate)}`
+                text: `A new event is created today by ${data.adminName} on ${new Date(response.startDate)}`
             };
             mailService.sendMail(mailOptions)
              .then(resolve=>{
@@ -55,7 +55,7 @@ let setServer = (server)=>{
                 from: 'meetingplannerapp@gmail.com',
                 to: data.email,
                 subject: 'New Event created',
-                text: `Your meeting ${response.meetingTitle} is edited today by ${response.adminName}`
+                text: `Your meeting ${response.meetingTitle} is edited today by ${data.adminName}`
             };
             mailService.sendMail(mailOptions)
              .then(resolve=>{
